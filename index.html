@@ -12,19 +12,23 @@
 
   html, body {
     height: 100%;
-    overflow-x: hidden;
+    overflow: hidden;
+    overscroll-behavior: none;
   }
 
   body {
     min-height: 100vh;
+    min-height: 100dvh;
     display: grid;
     place-items: center;
     background: linear-gradient(135deg, #fff6e9, #ffe9f0, #eaf4ff);
     background-size: 300% 300%;
     animation: bgShift 12s ease infinite;
     font-family: "Quicksand", sans-serif;
-    position: relative;
+    position: fixed;
+    inset: 0;
     padding: 20px;
+    touch-action: none;
   }
 
   @keyframes bgShift {
@@ -335,7 +339,7 @@
       <h2 class="question">Adivia ini cantik ngga?</h2>
       <div class="button-container">
         <button class="yes-btn btn js-yes-btn">Iya cantik</button>
-        <button class="no-btn btn js-no-btn">Ngga</button>
+        <button class="no-btn btn js-no-btn">Ngga cantik</button>
       </div>
     </div>
 
@@ -353,7 +357,7 @@
     <!-- STEP 3 -->
     <div class="step" data-step="2">
       <div class="progress-dots"></div>
-      <img class="step-image" src="images/step3.jpg" alt="foto adivia 3" onerror="this.src='snapshot3.jpg'" />
+      <img class="step-image" src="images/step3.jpg" alt="foto adivia 3" onerror="snapshot3.jpg'" />
       <h2 class="question">Baik ngga orangnya?</h2>
       <div class="button-container">
         <button class="yes-btn btn js-yes-btn">Baik banget</button>
@@ -408,14 +412,26 @@
     const yesBtn = stepEl.querySelector(".js-yes-btn");
     let attempts = 0;
 
+    function getVisibleBounds() {
+      // area yang beneran keliatan di layar; lebih akurat dari window.innerHeight
+      // yang suka meleset di HP gara-gara address bar browser muncul/ilang
+      const vv = window.visualViewport;
+      if (vv) return { width: vv.width, height: vv.height };
+      return {
+        width: document.documentElement.clientWidth,
+        height: document.documentElement.clientHeight
+      };
+    }
+
     function moveNoButton() {
       const rect = noBtn.getBoundingClientRect();
       const btnWidth = noBtn.offsetWidth;
       const btnHeight = noBtn.offsetHeight;
+      const { width: viewW, height: viewH } = getVisibleBounds();
 
       // jarak lompat dipersempit biar nggak kejauhan / ilang dari jangkauan
-      const minJump = 50;
-      const maxJump = 90;
+      const minJump = 45;
+      const maxJump = 80;
 
       // arah random, tapi jarak dijamin antara minJump - maxJump (nggak 0, nggak jauh)
       const angle = Math.random() * Math.PI * 2;
@@ -424,12 +440,12 @@
       let newX = rect.left + Math.cos(angle) * distance;
       let newY = rect.top + Math.sin(angle) * distance;
 
-      // batas aman: jangan terlalu mepet tepi, dan hindari area tombol musik di kanan atas
+      // batas aman: selalu di dalam area layar yang beneran keliatan
       const margin = 16;
       const minX = margin;
-      const maxX = window.innerWidth - btnWidth - margin;
+      const maxX = viewW - btnWidth - margin;
       const minY = margin + 60; // kasih ruang di atas biar nggak numpuk tombol musik
-      const maxY = window.innerHeight - btnHeight - margin;
+      const maxY = viewH - btnHeight - margin;
 
       newX = Math.min(Math.max(newX, minX), maxX);
       newY = Math.min(Math.max(newY, minY), maxY);
