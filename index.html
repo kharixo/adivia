@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+<title>Do you love me? 💕</title>
+<style>
+  * { padding: 0; margin: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #ffe6e9, #ffd1dc, #ffe6f2);
+    background-size: 300% 300%;
+    animation: bgShift 10s ease infinite;
+    font-family: "Quicksand", sans-serif;
+    position: relative;
+  }
+
+  @keyframes bgShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* floating background hearts */
+  .float-heart {
+    position: absolute;
+    bottom: -50px;
+    font-size: 1.5rem;
+    color: #ff6b81;
+    opacity: 0.6;
+    animation: floatUp linear infinite;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+    100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+  }
+
+  .container {
+    position: relative;
+    text-align: center;
+    z-index: 2;
+  }
+
+  .question-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: popIn 0.6s ease;
+  }
+
+  @keyframes popIn {
+    0% { transform: scale(0.7); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .big-heart {
+    font-size: 6rem;
+    margin-bottom: 1rem;
+    animation: beat 1.2s ease-in-out infinite;
+    filter: drop-shadow(0 6px 10px rgba(255,107,129,0.5));
+  }
+
+  @keyframes beat {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.15); }
+    40% { transform: scale(0.95); }
+    60% { transform: scale(1.1); }
+  }
+
+  .question {
+    font-size: 2.6rem;
+    margin-bottom: 2rem;
+    color: #d6336c;
+    font-weight: 700;
+    text-shadow: 1px 1px 0 #fff;
+  }
+
+  .button-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    height: 60px;
+    width: min(90vw, 420px);
+  }
+
+  .btn {
+    border: none;
+    border-radius: 50px;
+    padding: 12px 28px;
+    font-family: "Poppins", sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    color: white;
+  }
+
+  .yes-btn {
+    background: linear-gradient(135deg, #ff6b81, #ff4d6d);
+    box-shadow: 0px 4px 15px rgba(255, 107, 129, 0.5);
+    transform: scale(1);
+  }
+
+  .yes-btn:hover {
+    background: linear-gradient(135deg, #ff4d6d, #ff2e55);
+    transform: scale(1.12);
+    box-shadow: 0px 6px 22px rgba(255, 77, 109, 0.7);
+  }
+
+  .no-btn {
+    background: #9aa5b1;
+    position: fixed;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+  }
+
+  .result-container {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    animation: popIn 0.6s ease;
+  }
+
+  .result-heart {
+    font-size: 7rem;
+    animation: burst 0.8s ease;
+    margin-bottom: 1rem;
+  }
+
+  @keyframes burst {
+    0% { transform: scale(0); opacity: 0; }
+    60% { transform: scale(1.3); opacity: 1; }
+    100% { transform: scale(1); }
+  }
+
+  .result-container h2 {
+    font-size: 2.6rem;
+    color: #d6336c;
+    text-align: center;
+  }
+
+  .result-container p {
+    margin-top: 0.8rem;
+    color: #a3405a;
+    font-size: 1.1rem;
+  }
+
+  /* heart loader */
+  .cssload-main {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .loader-heart {
+    font-size: 4rem;
+    animation: loaderSpin 1s ease-in-out infinite;
+  }
+
+  @keyframes loaderSpin {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.3) rotate(15deg); }
+  }
+
+  .cssload-main p {
+    color: #d6336c;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  /* confetti */
+  .confetti {
+    position: fixed;
+    top: -10px;
+    width: 10px;
+    height: 14px;
+    opacity: 0.9;
+    pointer-events: none;
+    animation: confettiFall linear forwards;
+    z-index: 5;
+  }
+
+  @keyframes confettiFall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+  }
+
+  @media (max-width: 480px) {
+    .question { font-size: 1.9rem; }
+    .big-heart { font-size: 4.5rem; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="question-container">
+      <div class="big-heart">💗</div>
+      <h2 class="question">Do you love me?</h2>
+      <div class="button-container">
+        <button class="yes-btn btn js-yes-btn">Yes 💖</button>
+        <button class="no-btn btn js-no-btn">No</button>
+      </div>
+    </div>
+
+    <div class="result-container">
+      <div class="result-heart">😍💕</div>
+      <h2>I knew it!</h2>
+      <p>You can't escape love that easily~</p>
+    </div>
+
+    <div class="cssload-main">
+      <div class="loader-heart">💓</div>
+      <p>Calculating your feelings...</p>
+    </div>
+  </div>
+
+<script>
+  const questionContainer = document.querySelector(".question-container");
+  const resultContainer = document.querySelector(".result-container");
+  const heartLoader = document.querySelector(".cssload-main");
+  const yesBtn = document.querySelector(".js-yes-btn");
+  const noBtn = document.querySelector(".js-no-btn");
+
+  const noTexts = [
+    "No", "Are you sure?", "Really sure?", "Think again!",
+    "Last chance!", "Nope, try 'Yes'", "You missed!", "Come on 😏"
+  ];
+  let noClickAttempts = 0;
+
+  function moveNoButton() {
+    const btnWidth = noBtn.offsetWidth;
+    const btnHeight = noBtn.offsetHeight;
+    const maxX = window.innerWidth - btnWidth - 20;
+    const maxY = window.innerHeight - btnHeight - 20;
+    const newX = Math.max(10, Math.floor(Math.random() * maxX));
+    const newY = Math.max(10, Math.floor(Math.random() * maxY));
+    noBtn.style.left = `${newX}px`;
+    noBtn.style.top = `${newY}px`;
+
+    noClickAttempts++;
+    noBtn.textContent = noTexts[Math.min(noClickAttempts, noTexts.length - 1)];
+
+    // yes button grows a little each time to make it more inviting
+    const currentScale = 1 + Math.min(noClickAttempts * 0.08, 0.8);
+    yesBtn.style.transform = `scale(${currentScale})`;
+  }
+
+  noBtn.addEventListener("mouseover", moveNoButton);
+  noBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    moveNoButton();
+  });
+  // touch support for mobile
+  noBtn.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    moveNoButton();
+  });
+
+  function spawnConfetti() {
+    const colors = ["#ff6b81", "#ff9aa2", "#ffd6e0", "#ff4d6d", "#ffb3c1"];
+    for (let i = 0; i < 40; i++) {
+      const piece = document.createElement("div");
+      piece.className = "confetti";
+      piece.style.left = Math.random() * 100 + "vw";
+      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+      piece.style.animationDuration = 2 + Math.random() * 2 + "s";
+      piece.style.borderRadius = Math.random() > 0.5 ? "50%" : "2px";
+      document.body.appendChild(piece);
+      setTimeout(() => piece.remove(), 4000);
+    }
+  }
+
+  yesBtn.addEventListener("click", () => {
+    questionContainer.style.display = "none";
+    heartLoader.style.display = "flex";
+
+    setTimeout(() => {
+      heartLoader.style.display = "none";
+      resultContainer.style.display = "flex";
+      spawnConfetti();
+    }, 2000);
+  });
+
+  // floating background hearts
+  const heartEmojis = ["💗", "💖", "💕", "💓", "❤️"];
+  function spawnFloatingHeart() {
+    const heart = document.createElement("div");
+    heart.className = "float-heart";
+    heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = 1 + Math.random() * 1.5 + "rem";
+    heart.style.animationDuration = 6 + Math.random() * 6 + "s";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 12000);
+  }
+  setInterval(spawnFloatingHeart, 600);
+</script>
+</body>
+</html>
