@@ -6,23 +6,25 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-<title>Do you love me? 💕</title>
+<title>Adivia ini cantik ngga? 🎀</title>
 <style>
   * { padding: 0; margin: 0; box-sizing: border-box; }
 
   html, body {
     height: 100%;
-    overflow: hidden;
+    overflow-x: hidden;
   }
 
   body {
+    min-height: 100vh;
     display: grid;
     place-items: center;
-    background: linear-gradient(135deg, #ffe6e9, #ffd1dc, #ffe6f2);
+    background: linear-gradient(135deg, #fff6e9, #ffe9f0, #eaf4ff);
     background-size: 300% 300%;
-    animation: bgShift 10s ease infinite;
+    animation: bgShift 12s ease infinite;
     font-family: "Quicksand", sans-serif;
     position: relative;
+    padding: 20px;
   }
 
   @keyframes bgShift {
@@ -31,163 +33,199 @@
     100% { background-position: 0% 50%; }
   }
 
-  /* floating background hearts */
-  .float-heart {
-    position: absolute;
-    bottom: -50px;
-    font-size: 1.5rem;
-    color: #ff6b81;
-    opacity: 0.6;
-    animation: floatUp linear infinite;
-    pointer-events: none;
-    user-select: none;
-  }
-
-  @keyframes floatUp {
-    0% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
-    100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
-  }
-
   .container {
     position: relative;
     text-align: center;
     z-index: 2;
+    width: min(92vw, 420px);
   }
 
-  .question-container {
-    display: flex;
+  .step {
+    display: none;
     flex-direction: column;
     align-items: center;
-    animation: popIn 0.6s ease;
+    animation: popIn 0.5s ease;
   }
 
+  .step.active { display: flex; }
+
   @keyframes popIn {
-    0% { transform: scale(0.7); opacity: 0; }
+    0% { transform: scale(0.85); opacity: 0; }
     100% { transform: scale(1); opacity: 1; }
   }
 
-  .big-heart {
-    font-size: 6rem;
-    margin-bottom: 1rem;
-    animation: beat 1.2s ease-in-out infinite;
-    filter: drop-shadow(0 6px 10px rgba(255,107,129,0.5));
+  .step-image {
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 24px;
+    margin-bottom: 1.3rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    background: #fff;
+    border: 4px solid #fff;
   }
 
-  @keyframes beat {
-    0%, 100% { transform: scale(1); }
-    25% { transform: scale(1.15); }
-    40% { transform: scale(0.95); }
-    60% { transform: scale(1.1); }
+  .progress-dots {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1.2rem;
   }
+
+  .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #f3c6d3;
+    transition: all 0.3s ease;
+  }
+
+  .dot.done { background: #ff9ab3; }
+  .dot.current { background: #ff6b8f; transform: scale(1.3); }
 
   .question {
-    font-size: 2.6rem;
-    margin-bottom: 2rem;
-    color: #d6336c;
-    font-weight: 700;
-    text-shadow: 1px 1px 0 #fff;
+    font-size: 1.7rem;
+    margin-bottom: 1.8rem;
+    color: #5b4a52;
+    font-weight: 600;
   }
 
   .button-container {
     position: relative;
     display: flex;
     justify-content: center;
-    gap: 1.5rem;
-    height: 60px;
-    width: min(90vw, 420px);
+    gap: 1.2rem;
+    height: 54px;
+    width: 100%;
   }
 
   .btn {
     border: none;
-    border-radius: 50px;
-    padding: 12px 28px;
+    border-radius: 40px;
+    padding: 11px 20px;
     font-family: "Poppins", sans-serif;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.25s ease;
     color: white;
+    width: 140px;
+    height: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.1;
   }
 
   .yes-btn {
-    background: linear-gradient(135deg, #ff6b81, #ff4d6d);
-    box-shadow: 0px 4px 15px rgba(255, 107, 129, 0.5);
-    transform: scale(1);
+    background: #ff8fab;
+    box-shadow: 0px 4px 12px rgba(255, 143, 171, 0.5);
+    z-index: 15;
   }
 
   .yes-btn:hover {
-    background: linear-gradient(135deg, #ff4d6d, #ff2e55);
-    transform: scale(1.12);
-    box-shadow: 0px 6px 22px rgba(255, 77, 109, 0.7);
+    background: #ff6f9c;
+    transform: scale(1.1);
   }
 
   .no-btn {
-    background: #9aa5b1;
+    background: #b8c1cc;
     position: fixed;
-    box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
+    z-index: 20;
   }
 
-  .result-container {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    animation: popIn 0.6s ease;
+  /* final result */
+  .result-step .step-image {
+    width: 240px;
+    height: 240px;
   }
 
-  .result-heart {
-    font-size: 7rem;
-    animation: burst 0.8s ease;
-    margin-bottom: 1rem;
+  .result-step .question {
+    font-size: 1.6rem;
+    color: #5b4a52;
   }
 
-  @keyframes burst {
-    0% { transform: scale(0); opacity: 0; }
-    60% { transform: scale(1.3); opacity: 1; }
-    100% { transform: scale(1); }
+  .result-step p {
+    margin-top: 0.4rem;
+    color: #9a8790;
+    font-size: 0.95rem;
   }
 
-  .result-container h2 {
-    font-size: 2.6rem;
-    color: #d6336c;
-    text-align: center;
-  }
-
-  .result-container p {
-    margin-top: 0.8rem;
-    color: #a3405a;
-    font-size: 1.1rem;
-  }
-
-  /* heart loader */
-  .cssload-main {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .loader-heart {
-    font-size: 4rem;
-    animation: loaderSpin 1s ease-in-out infinite;
-  }
-
-  @keyframes loaderSpin {
-    0%, 100% { transform: scale(1) rotate(0deg); }
-    50% { transform: scale(1.3) rotate(15deg); }
-  }
-
-  .cssload-main p {
-    color: #d6336c;
+  .replay-btn {
+    margin-top: 1.3rem;
+    background: transparent;
+    border: 2px solid #ff8fab;
+    color: #ff6f9c;
+    padding: 8px 20px;
+    border-radius: 40px;
+    font-family: "Poppins", sans-serif;
     font-weight: 600;
-    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s ease;
   }
+
+  .replay-btn:hover {
+    background: #ff8fab;
+    color: white;
+  }
+
+  /* loader */
+  .loader-step {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .loader-step.active { display: flex; }
+
+  .loader-dot-spin {
+    width: 42px;
+    height: 42px;
+    border: 4px solid #ffe1ea;
+    border-top-color: #ff8fab;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .loader-step p {
+    color: #b98a9a;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  /* music control */
+  .music-toggle {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    width: 46px;
+    height: 46px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 10;
+    display: grid;
+    place-items: center;
+    transition: transform 0.2s ease;
+  }
+
+  .music-toggle:hover { transform: scale(1.1); }
 
   /* confetti */
   .confetti {
     position: fixed;
     top: -10px;
-    width: 10px;
-    height: 14px;
+    width: 9px;
+    height: 12px;
     opacity: 0.9;
     pointer-events: none;
     animation: confettiFall linear forwards;
@@ -196,84 +234,255 @@
 
   @keyframes confettiFall {
     0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+    100% { transform: translateY(105vh) rotate(600deg); opacity: 0; }
   }
 
   @media (max-width: 480px) {
-    .question { font-size: 1.9rem; }
-    .big-heart { font-size: 4.5rem; }
+    .question { font-size: 1.4rem; }
+    .step-image { width: 170px; height: 170px; }
+    .result-step .step-image { width: 190px; height: 190px; }
+  }
+
+  /* start overlay */
+  .start-overlay {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #fff6e9, #ffe9f0, #eaf4ff);
+    display: grid;
+    place-items: center;
+    z-index: 50;
+    cursor: pointer;
+    transition: opacity 0.4s ease;
+  }
+
+  .start-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .start-box {
+    text-align: center;
+    animation: floatBounce 2s ease-in-out infinite;
+  }
+
+  .start-emoji {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .start-box h1 {
+    font-size: 1.6rem;
+    color: #5b4a52;
+    margin-bottom: 0.5rem;
+  }
+
+  .start-box p {
+    color: #b98a9a;
+    font-size: 0.95rem;
+  }
+
+  @keyframes floatBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .content-wrapper {
+    filter: blur(6px);
+    transition: filter 0.4s ease;
+  }
+
+  .content-wrapper.revealed {
+    filter: blur(0);
+  }
+
+  /* interactive background */
+  #bg-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
   }
 </style>
 </head>
 <body>
 
-  <div class="container">
-    <div class="question-container">
-      <div class="big-heart">💗</div>
-      <h2 class="question">Do you love me?</h2>
-      <div class="button-container">
-        <button class="yes-btn btn js-yes-btn">Yes 💖</button>
-        <button class="no-btn btn js-no-btn">No</button>
-      </div>
-    </div>
+  <canvas id="bg-canvas"></canvas>
 
-    <div class="result-container">
-      <div class="result-heart">😍💕</div>
-      <h2>I knew it!</h2>
-      <p>You can't escape love that easily~</p>
-    </div>
-
-    <div class="cssload-main">
-      <div class="loader-heart">💓</div>
-      <p>Calculating your feelings...</p>
+  <div class="start-overlay" id="startOverlay">
+    <div class="start-box">
+      <div class="start-emoji">🎀</div>
+      <h1>Ketuk untuk mulai</h1>
+      <p>ada pertanyaan penting nih</p>
     </div>
   </div>
 
+  <!--
+    Backsound pakai file mp3 lokal.
+    Ganti "musik.mp3" di bawah dengan path/nama file musik kamu sendiri.
+    Taruh file mp3-nya sejajar dengan file HTML ini (atau sesuaikan path-nya).
+  -->
+  <audio id="bgm" src="glue-song.mp3" loop preload="auto"></audio>
+  <button class="music-toggle" id="musicToggle" title="Play/pause musik">🔇</button>
+
+  <div class="content-wrapper" id="contentWrapper">
+
+  <div class="container">
+
+    <!-- STEP 1 -->
+    <div class="step active" data-step="0">
+      <div class="progress-dots"></div>
+      <img class="step-image" src="images/step1.jpg" alt="foto adivia 1" onerror="this.src='snapshot.jpg'" />
+      <h2 class="question">Adivia ini cantik ngga?</h2>
+      <div class="button-container">
+        <button class="yes-btn btn js-yes-btn">Iya cantik</button>
+        <button class="no-btn btn js-no-btn">Ngga</button>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step" data-step="1">
+      <div class="progress-dots"></div>
+      <img class="step-image" src="images/step2.jpg" alt="foto adivia 2" onerror="this.src='snapshot2.jpg'" />
+      <h2 class="question">Kalo pinter, gimana?</h2>
+      <div class="button-container">
+        <button class="yes-btn btn js-yes-btn">Pinter banget</button>
+        <button class="no-btn btn js-no-btn">Ngga juga</button>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step" data-step="2">
+      <div class="progress-dots"></div>
+      <img class="step-image" src="images/step3.jpg" alt="foto adivia 3" onerror="this.src='snapshot3.jpg'" />
+      <h2 class="question">Baik ngga orangnya?</h2>
+      <div class="button-container">
+        <button class="yes-btn btn js-yes-btn">Baik banget</button>
+        <button class="no-btn btn js-no-btn">Lumayan</button>
+      </div>
+    </div>
+
+    <!-- LOADER -->
+    <div class="loader-step">
+      <div class="loader-dot-spin"></div>
+      <p>Lagi mikir...</p>
+    </div>
+
+    <!-- FINAL -->
+    <div class="step result-step" data-step="final">
+      <img class="step-image" src="images/final.jpg" alt="foto adivia" onerror="this.src='https://placehold.co/240x240/ffe1ea/ff6f9c?text=Adivia'" />
+      <h2 class="question">Yaudah pokoknya Adivia emang the best 🎀</h2>
+      <p>Cantik, pinter, baik. Paket lengkap deh.</p>
+      <button class="replay-btn" id="replayBtn">Ulangi lagi</button>
+    </div>
+
+  </div>
+
+  </div>
+
 <script>
-  const questionContainer = document.querySelector(".question-container");
-  const resultContainer = document.querySelector(".result-container");
-  const heartLoader = document.querySelector(".cssload-main");
-  const yesBtn = document.querySelector(".js-yes-btn");
-  const noBtn = document.querySelector(".js-no-btn");
+  const steps = Array.from(document.querySelectorAll(".step:not(.result-step)"));
+  const resultStep = document.querySelector(".result-step");
+  const loaderStep = document.querySelector(".loader-step");
+  const totalSteps = steps.length;
+  let currentStepIndex = 0;
 
   const noTexts = [
-    "No", "Are you sure?", "Really sure?", "Think again!",
-    "Last chance!", "Nope, try 'Yes'", "You missed!", "Come on 😏"
+    "Ngga", "Yakin engga?", "Coba lagi", "Pikir lagi deh", "Dikit lagi", "Hampir!", "Nyerah aja 😏"
   ];
-  let noClickAttempts = 0;
 
-  function moveNoButton() {
-    const btnWidth = noBtn.offsetWidth;
-    const btnHeight = noBtn.offsetHeight;
-    const maxX = window.innerWidth - btnWidth - 20;
-    const maxY = window.innerHeight - btnHeight - 20;
-    const newX = Math.max(10, Math.floor(Math.random() * maxX));
-    const newY = Math.max(10, Math.floor(Math.random() * maxY));
-    noBtn.style.left = `${newX}px`;
-    noBtn.style.top = `${newY}px`;
-
-    noClickAttempts++;
-    noBtn.textContent = noTexts[Math.min(noClickAttempts, noTexts.length - 1)];
-
-    // yes button grows a little each time to make it more inviting
-    const currentScale = 1 + Math.min(noClickAttempts * 0.08, 0.8);
-    yesBtn.style.transform = `scale(${currentScale})`;
+  function buildDots(activeStep) {
+    activeStep.querySelectorAll(".progress-dots").forEach(el => el.innerHTML = "");
+    const dotsWrap = activeStep.querySelector(".progress-dots");
+    for (let i = 0; i < totalSteps; i++) {
+      const dot = document.createElement("div");
+      dot.className = "dot";
+      if (i < currentStepIndex) dot.classList.add("done");
+      if (i === currentStepIndex) dot.classList.add("current");
+      dotsWrap.appendChild(dot);
+    }
   }
 
-  noBtn.addEventListener("mouseover", moveNoButton);
-  noBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    moveNoButton();
-  });
-  // touch support for mobile
-  noBtn.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    moveNoButton();
+  function initStep(stepEl) {
+    buildDots(stepEl);
+    const noBtn = stepEl.querySelector(".js-no-btn");
+    const yesBtn = stepEl.querySelector(".js-yes-btn");
+    let attempts = 0;
+
+    function moveNoButton() {
+      const rect = noBtn.getBoundingClientRect();
+      const btnWidth = noBtn.offsetWidth;
+      const btnHeight = noBtn.offsetHeight;
+
+      // jarak lompat dipersempit biar nggak kejauhan / ilang dari jangkauan
+      const minJump = 50;
+      const maxJump = 90;
+
+      // arah random, tapi jarak dijamin antara minJump - maxJump (nggak 0, nggak jauh)
+      const angle = Math.random() * Math.PI * 2;
+      const distance = minJump + Math.random() * (maxJump - minJump);
+
+      let newX = rect.left + Math.cos(angle) * distance;
+      let newY = rect.top + Math.sin(angle) * distance;
+
+      // batas aman: jangan terlalu mepet tepi, dan hindari area tombol musik di kanan atas
+      const margin = 16;
+      const minX = margin;
+      const maxX = window.innerWidth - btnWidth - margin;
+      const minY = margin + 60; // kasih ruang di atas biar nggak numpuk tombol musik
+      const maxY = window.innerHeight - btnHeight - margin;
+
+      newX = Math.min(Math.max(newX, minX), maxX);
+      newY = Math.min(Math.max(newY, minY), maxY);
+
+      noBtn.style.position = "fixed";
+      noBtn.style.left = `${newX}px`;
+      noBtn.style.top = `${newY}px`;
+
+      attempts++;
+      noBtn.textContent = noTexts[Math.min(attempts, noTexts.length - 1)];
+      yesBtn.style.transform = `scale(${1 + Math.min(attempts * 0.06, 0.5)})`;
+    }
+
+    noBtn.addEventListener("mouseover", moveNoButton);
+    noBtn.addEventListener("click", (e) => { e.preventDefault(); moveNoButton(); });
+    noBtn.addEventListener("touchstart", (e) => { e.preventDefault(); moveNoButton(); });
+
+    yesBtn.addEventListener("click", () => goNext(stepEl));
+  }
+
+  function goNext(currentEl) {
+    currentEl.classList.remove("active");
+    loaderStep.classList.add("active");
+
+    setTimeout(() => {
+      loaderStep.classList.remove("active");
+      currentStepIndex++;
+
+      if (currentStepIndex < totalSteps) {
+        const nextStep = steps[currentStepIndex];
+        nextStep.classList.add("active");
+        buildDots(nextStep);
+      } else {
+        resultStep.classList.add("active");
+        spawnConfetti();
+      }
+    }, 900);
+  }
+
+  steps.forEach(initStep);
+  buildDots(steps[0]);
+
+  document.getElementById("replayBtn").addEventListener("click", () => {
+    resultStep.classList.remove("active");
+    currentStepIndex = 0;
+    steps.forEach(s => s.classList.remove("active"));
+    steps[0].classList.add("active");
+    buildDots(steps[0]);
   });
 
   function spawnConfetti() {
-    const colors = ["#ff6b81", "#ff9aa2", "#ffd6e0", "#ff4d6d", "#ffb3c1"];
-    for (let i = 0; i < 40; i++) {
+    const colors = ["#ff8fab", "#ffd6e0", "#ffe9a8", "#c7f2d7", "#b8e0ff"];
+    for (let i = 0; i < 30; i++) {
       const piece = document.createElement("div");
       piece.className = "confetti";
       piece.style.left = Math.random() * 100 + "vw";
@@ -285,30 +494,135 @@
     }
   }
 
-  yesBtn.addEventListener("click", () => {
-    questionContainer.style.display = "none";
-    heartLoader.style.display = "flex";
+  // ===== Backsound via file mp3 =====
+  const bgm = document.getElementById("bgm");
+  const musicToggle = document.getElementById("musicToggle");
+  let isPlaying = false;
 
-    setTimeout(() => {
-      heartLoader.style.display = "none";
-      resultContainer.style.display = "flex";
-      spawnConfetti();
-    }, 2000);
+  // start overlay: begitu diklik, hilang + musik langsung play dengan suara
+  const startOverlay = document.getElementById("startOverlay");
+  const contentWrapper = document.getElementById("contentWrapper");
+
+  function startExperience() {
+    startOverlay.classList.add("hidden");
+    contentWrapper.classList.add("revealed");
+
+    bgm.play().then(() => {
+      isPlaying = true;
+      musicToggle.textContent = "🔊";
+    }).catch(() => {
+      // kalau tetap gagal (jarang terjadi), user masih bisa pencet tombol musik manual
+    });
+
+    setTimeout(() => startOverlay.remove(), 500);
+  }
+
+  startOverlay.addEventListener("click", startExperience);
+  startOverlay.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    startExperience();
   });
 
-  // floating background hearts
-  const heartEmojis = ["💗", "💖", "💕", "💓", "❤️"];
-  function spawnFloatingHeart() {
-    const heart = document.createElement("div");
-    heart.className = "float-heart";
-    heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.fontSize = 1 + Math.random() * 1.5 + "rem";
-    heart.style.animationDuration = 6 + Math.random() * 6 + "s";
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 12000);
+  musicToggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (isPlaying) {
+      bgm.pause();
+      musicToggle.textContent = "🔇";
+    } else {
+      bgm.play().catch(() => {});
+      musicToggle.textContent = "🔊";
+    }
+    isPlaying = !isPlaying;
+  });
+
+  // ===== Background interaktif (partikel lembut mengikuti kursor/sentuhan) =====
+  const canvas = document.getElementById("bg-canvas");
+  const ctx = canvas.getContext("2d");
+  let W, H;
+
+  function resizeCanvas() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
   }
-  setInterval(spawnFloatingHeart, 600);
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
+
+  const colors = ["#ffb3c6", "#ffd6e0", "#ffe9a8", "#c7f2d7", "#b8e0ff", "#e0c3fc"];
+  const particleCount = 55;
+  const particles = [];
+
+  for (let i = 0; i < particleCount; i++) {
+    particles.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: 4 + Math.random() * 8,
+      baseR: 0,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      opacity: 0.3 + Math.random() * 0.4
+    });
+  }
+  particles.forEach(p => (p.baseR = p.r));
+
+  let mouseX = W / 2;
+  let mouseY = H / 2;
+  let mouseActive = false;
+
+  function updatePointer(x, y) {
+    mouseX = x;
+    mouseY = y;
+    mouseActive = true;
+  }
+
+  window.addEventListener("mousemove", (e) => updatePointer(e.clientX, e.clientY));
+  window.addEventListener("touchmove", (e) => {
+    if (e.touches && e.touches[0]) {
+      updatePointer(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  }, { passive: true });
+
+  function animateBg() {
+    ctx.clearRect(0, 0, W, H);
+
+    particles.forEach(p => {
+      // gerakan mengambang pelan
+      p.x += p.vx;
+      p.y += p.vy;
+
+      // pantulan lembut di tepi layar
+      if (p.x < 0 || p.x > W) p.vx *= -1;
+      if (p.y < 0 || p.y > H) p.vy *= -1;
+
+      // interaksi dengan kursor: partikel di dekat kursor menjauh pelan & sedikit membesar
+      let targetR = p.baseR;
+      if (mouseActive) {
+        const dx = p.x - mouseX;
+        const dy = p.y - mouseY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const influenceRadius = 140;
+
+        if (dist < influenceRadius) {
+          const force = (influenceRadius - dist) / influenceRadius;
+          const angle = Math.atan2(dy, dx);
+          p.x += Math.cos(angle) * force * 1.8;
+          p.y += Math.sin(angle) * force * 1.8;
+          targetR = p.baseR * (1 + force * 0.8);
+        }
+      }
+      p.r += (targetR - p.r) * 0.1;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = p.opacity;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    });
+
+    requestAnimationFrame(animateBg);
+  }
+  animateBg();
 </script>
 </body>
 </html>
