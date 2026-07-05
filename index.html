@@ -12,29 +12,33 @@
 
   html, body {
     height: 100%;
-    overflow: hidden;
-    overscroll-behavior: none;
+    overflow-x: hidden;
   }
 
   body {
     min-height: 100vh;
-    min-height: 100dvh;
     display: grid;
     place-items: center;
     background: linear-gradient(135deg, #fff6e9, #ffe9f0, #eaf4ff);
     background-size: 300% 300%;
     animation: bgShift 12s ease infinite;
     font-family: "Quicksand", sans-serif;
-    position: fixed;
-    inset: 0;
+    position: relative;
     padding: 20px;
-    touch-action: none;
   }
 
   @keyframes bgShift {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
+  }
+
+  /* interactive background */
+  #bg-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
   }
 
   .container {
@@ -105,26 +109,18 @@
   .btn {
     border: none;
     border-radius: 40px;
-    padding: 11px 20px;
+    padding: 11px 26px;
     font-family: "Poppins", sans-serif;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.25s ease;
     color: white;
-    width: 140px;
-    height: 50px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    line-height: 1.1;
   }
 
   .yes-btn {
     background: #ff8fab;
     box-shadow: 0px 4px 12px rgba(255, 143, 171, 0.5);
-    z-index: 15;
   }
 
   .yes-btn:hover {
@@ -136,7 +132,6 @@
     background: #b8c1cc;
     position: fixed;
     box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
-    z-index: 20;
   }
 
   /* final result */
@@ -246,89 +241,21 @@
     .step-image { width: 170px; height: 170px; }
     .result-step .step-image { width: 190px; height: 190px; }
   }
-
-  /* start overlay */
-  .start-overlay {
-    position: fixed;
-    inset: 0;
-    background: linear-gradient(135deg, #fff6e9, #ffe9f0, #eaf4ff);
-    display: grid;
-    place-items: center;
-    z-index: 50;
-    cursor: pointer;
-    transition: opacity 0.4s ease;
-  }
-
-  .start-overlay.hidden {
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .start-box {
-    text-align: center;
-    animation: floatBounce 2s ease-in-out infinite;
-  }
-
-  .start-emoji {
-    font-size: 3.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .start-box h1 {
-    font-size: 1.6rem;
-    color: #5b4a52;
-    margin-bottom: 0.5rem;
-  }
-
-  .start-box p {
-    color: #b98a9a;
-    font-size: 0.95rem;
-  }
-
-  @keyframes floatBounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-  }
-
-  .content-wrapper {
-    filter: blur(6px);
-    transition: filter 0.4s ease;
-  }
-
-  .content-wrapper.revealed {
-    filter: blur(0);
-  }
-
-  /* interactive background */
-  #bg-canvas {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-  }
 </style>
 </head>
 <body>
 
   <canvas id="bg-canvas"></canvas>
 
-  <div class="start-overlay" id="startOverlay">
-    <div class="start-box">
-      <div class="start-emoji">🎀</div>
-      <h1>Ketuk untuk mulai</h1>
-      <p>ada pertanyaan penting nih</p>
-    </div>
-  </div>
-
   <!--
-    Backsound pakai file mp3 lokal.
-    Ganti "musik.mp3" di bawah dengan path/nama file musik kamu sendiri.
-    Taruh file mp3-nya sejajar dengan file HTML ini (atau sesuaikan path-nya).
+    Backsound pakai YouTube (video disembunyikan, cuma suaranya).
+    Ganti YOUTUBE_VIDEO_ID di bawah kalau mau ganti lagu.
+    Cara ambil ID: dari link https://www.youtube.com/watch?v=XXXXXXXXXXX
+    ID-nya adalah bagian setelah "v=", contoh di bawah sudah diisi
+    "Is It The Answer" - Reality Club (official audio).
   -->
-  <audio id="bgm" src="glue-song.mp3" loop preload="auto"></audio>
+  <div id="yt-player" style="position:absolute; width:1px; height:1px; overflow:hidden; opacity:0;"></div>
   <button class="music-toggle" id="musicToggle" title="Play/pause musik">🔇</button>
-
-  <div class="content-wrapper" id="contentWrapper">
 
   <div class="container">
 
@@ -339,7 +266,7 @@
       <h2 class="question">Adivia ini cantik ngga?</h2>
       <div class="button-container">
         <button class="yes-btn btn js-yes-btn">Iya cantik</button>
-        <button class="no-btn btn js-no-btn">Ngga cantik</button>
+        <button class="no-btn btn js-no-btn">Ngga</button>
       </div>
     </div>
 
@@ -357,7 +284,7 @@
     <!-- STEP 3 -->
     <div class="step" data-step="2">
       <div class="progress-dots"></div>
-      <img class="step-image" src="images/step3.jpg" alt="foto adivia 3" onerror="snapshot3.jpg'" />
+      <img class="step-image" src="images/step3.jpg" alt="foto adivia 3" onerror="this.src='snapshot.jpg'" />
       <h2 class="question">Baik ngga orangnya?</h2>
       <div class="button-container">
         <button class="yes-btn btn js-yes-btn">Baik banget</button>
@@ -381,8 +308,6 @@
 
   </div>
 
-  </div>
-
 <script>
   const steps = Array.from(document.querySelectorAll(".step:not(.result-step)"));
   const resultStep = document.querySelector(".result-step");
@@ -391,7 +316,7 @@
   let currentStepIndex = 0;
 
   const noTexts = [
-    "Ngga", "Yakin engga?", "Coba lagi", "Pikir lagi deh", "Dikit lagi", "Hampir!", "Nyerah aja 😏"
+    "Ngga", "Yakin?", "Coba lagi", "Yah gagal", "Dikit lagi", "Hampir!", "Nyerah aja 😏"
   ];
 
   function buildDots(activeStep) {
@@ -412,51 +337,19 @@
     const yesBtn = stepEl.querySelector(".js-yes-btn");
     let attempts = 0;
 
-    function getVisibleBounds() {
-      // area yang beneran keliatan di layar; lebih akurat dari window.innerHeight
-      // yang suka meleset di HP gara-gara address bar browser muncul/ilang
-      const vv = window.visualViewport;
-      if (vv) return { width: vv.width, height: vv.height };
-      return {
-        width: document.documentElement.clientWidth,
-        height: document.documentElement.clientHeight
-      };
-    }
-
     function moveNoButton() {
-      const rect = noBtn.getBoundingClientRect();
       const btnWidth = noBtn.offsetWidth;
       const btnHeight = noBtn.offsetHeight;
-      const { width: viewW, height: viewH } = getVisibleBounds();
-
-      // jarak lompat dipersempit biar nggak kejauhan / ilang dari jangkauan
-      const minJump = 45;
-      const maxJump = 80;
-
-      // arah random, tapi jarak dijamin antara minJump - maxJump (nggak 0, nggak jauh)
-      const angle = Math.random() * Math.PI * 2;
-      const distance = minJump + Math.random() * (maxJump - minJump);
-
-      let newX = rect.left + Math.cos(angle) * distance;
-      let newY = rect.top + Math.sin(angle) * distance;
-
-      // batas aman: selalu di dalam area layar yang beneran keliatan
-      const margin = 16;
-      const minX = margin;
-      const maxX = viewW - btnWidth - margin;
-      const minY = margin + 60; // kasih ruang di atas biar nggak numpuk tombol musik
-      const maxY = viewH - btnHeight - margin;
-
-      newX = Math.min(Math.max(newX, minX), maxX);
-      newY = Math.min(Math.max(newY, minY), maxY);
-
-      noBtn.style.position = "fixed";
+      const maxX = window.innerWidth - btnWidth - 20;
+      const maxY = window.innerHeight - btnHeight - 20;
+      const newX = Math.max(10, Math.floor(Math.random() * maxX));
+      const newY = Math.max(10, Math.floor(Math.random() * maxY));
       noBtn.style.left = `${newX}px`;
       noBtn.style.top = `${newY}px`;
 
       attempts++;
       noBtn.textContent = noTexts[Math.min(attempts, noTexts.length - 1)];
-      yesBtn.style.transform = `scale(${1 + Math.min(attempts * 0.06, 0.5)})`;
+      yesBtn.style.transform = `scale(${1 + Math.min(attempts * 0.06, 0.6)})`;
     }
 
     noBtn.addEventListener("mouseover", moveNoButton);
@@ -510,42 +403,44 @@
     }
   }
 
-  // ===== Backsound via file mp3 =====
-  const bgm = document.getElementById("bgm");
+  // ===== Backsound via YouTube IFrame API =====
+  // Ganti ID di bawah ini kalau mau ganti lagu (ambil dari link youtube.com/watch?v=ID)
+  const YOUTUBE_VIDEO_ID = "bFO55Uq2oq0"; // Reality Club - Is It The Answer (official audio)
+
   const musicToggle = document.getElementById("musicToggle");
+  let ytPlayer = null;
   let isPlaying = false;
+  let playerReady = false;
 
-  // start overlay: begitu diklik, hilang + musik langsung play dengan suara
-  const startOverlay = document.getElementById("startOverlay");
-  const contentWrapper = document.getElementById("contentWrapper");
+  // load YouTube IFrame API script
+  const ytScriptTag = document.createElement("script");
+  ytScriptTag.src = "https://www.youtube.com/iframe_api";
+  document.body.appendChild(ytScriptTag);
 
-  function startExperience() {
-    startOverlay.classList.add("hidden");
-    contentWrapper.classList.add("revealed");
-
-    bgm.play().then(() => {
-      isPlaying = true;
-      musicToggle.textContent = "🔊";
-    }).catch(() => {
-      // kalau tetap gagal (jarang terjadi), user masih bisa pencet tombol musik manual
+  window.onYouTubeIframeAPIReady = function () {
+    ytPlayer = new YT.Player("yt-player", {
+      height: "1",
+      width: "1",
+      videoId: YOUTUBE_VIDEO_ID,
+      playerVars: {
+        autoplay: 0,
+        controls: 0,
+        loop: 1,
+        playlist: YOUTUBE_VIDEO_ID // needed for loop to work
+      },
+      events: {
+        onReady: () => { playerReady = true; }
+      }
     });
+  };
 
-    setTimeout(() => startOverlay.remove(), 500);
-  }
-
-  startOverlay.addEventListener("click", startExperience);
-  startOverlay.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    startExperience();
-  });
-
-  musicToggle.addEventListener("click", (e) => {
-    e.stopPropagation();
+  musicToggle.addEventListener("click", () => {
+    if (!playerReady) return;
     if (isPlaying) {
-      bgm.pause();
+      ytPlayer.pauseVideo();
       musicToggle.textContent = "🔇";
     } else {
-      bgm.play().catch(() => {});
+      ytPlayer.playVideo();
       musicToggle.textContent = "🔊";
     }
     isPlaying = !isPlaying;
@@ -563,7 +458,7 @@
   resizeCanvas();
   window.addEventListener("resize", resizeCanvas);
 
-  const colors = ["#ffb3c6", "#ffd6e0", "#ffe9a8", "#c7f2d7", "#b8e0ff", "#e0c3fc"];
+  const bgColors = ["#ffb3c6", "#ffd6e0", "#ffe9a8", "#c7f2d7", "#b8e0ff", "#e0c3fc"];
   const particleCount = 55;
   const particles = [];
 
@@ -573,7 +468,7 @@
       y: Math.random() * H,
       r: 4 + Math.random() * 8,
       baseR: 0,
-      color: colors[Math.floor(Math.random() * colors.length)],
+      color: bgColors[Math.floor(Math.random() * bgColors.length)],
       vx: (Math.random() - 0.5) * 0.3,
       vy: (Math.random() - 0.5) * 0.3,
       opacity: 0.3 + Math.random() * 0.4
@@ -602,15 +497,12 @@
     ctx.clearRect(0, 0, W, H);
 
     particles.forEach(p => {
-      // gerakan mengambang pelan
       p.x += p.vx;
       p.y += p.vy;
 
-      // pantulan lembut di tepi layar
       if (p.x < 0 || p.x > W) p.vx *= -1;
       if (p.y < 0 || p.y > H) p.vy *= -1;
 
-      // interaksi dengan kursor: partikel di dekat kursor menjauh pelan & sedikit membesar
       let targetR = p.baseR;
       if (mouseActive) {
         const dx = p.x - mouseX;
