@@ -248,13 +248,11 @@
   <canvas id="bg-canvas"></canvas>
 
   <!--
-    Backsound pakai YouTube (video disembunyikan, cuma suaranya).
-    Ganti YOUTUBE_VIDEO_ID di bawah kalau mau ganti lagu.
-    Cara ambil ID: dari link https://www.youtube.com/watch?v=XXXXXXXXXXX
-    ID-nya adalah bagian setelah "v=", contoh di bawah sudah diisi
-    "Is It The Answer" - Reality Club (official audio).
+    Backsound pakai file mp3 lokal.
+    Ganti "musik.mp3" di bawah dengan path/nama file musik kamu sendiri.
+    Taruh file mp3-nya sejajar dengan file HTML ini (atau sesuaikan path-nya).
   -->
-  <div id="yt-player" style="position:absolute; width:1px; height:1px; overflow:hidden; opacity:0;"></div>
+  <audio id="bgm" src="glue-song.mp3" loop preload="auto"></audio>
   <button class="music-toggle" id="musicToggle" title="Play/pause musik">🔇</button>
 
   <div class="container">
@@ -403,44 +401,17 @@
     }
   }
 
-  // ===== Backsound via YouTube IFrame API =====
-  // Ganti ID di bawah ini kalau mau ganti lagu (ambil dari link youtube.com/watch?v=ID)
-  const YOUTUBE_VIDEO_ID = "bFO55Uq2oq0"; // Reality Club - Is It The Answer (official audio)
-
+  // ===== Backsound via file mp3 =====
+  const bgm = document.getElementById("bgm");
   const musicToggle = document.getElementById("musicToggle");
-  let ytPlayer = null;
   let isPlaying = false;
-  let playerReady = false;
-
-  // load YouTube IFrame API script
-  const ytScriptTag = document.createElement("script");
-  ytScriptTag.src = "https://www.youtube.com/iframe_api";
-  document.body.appendChild(ytScriptTag);
-
-  window.onYouTubeIframeAPIReady = function () {
-    ytPlayer = new YT.Player("yt-player", {
-      height: "1",
-      width: "1",
-      videoId: YOUTUBE_VIDEO_ID,
-      playerVars: {
-        autoplay: 0,
-        controls: 0,
-        loop: 1,
-        playlist: YOUTUBE_VIDEO_ID // needed for loop to work
-      },
-      events: {
-        onReady: () => { playerReady = true; }
-      }
-    });
-  };
 
   musicToggle.addEventListener("click", () => {
-    if (!playerReady) return;
     if (isPlaying) {
-      ytPlayer.pauseVideo();
+      bgm.pause();
       musicToggle.textContent = "🔇";
     } else {
-      ytPlayer.playVideo();
+      bgm.play().catch(() => {});
       musicToggle.textContent = "🔊";
     }
     isPlaying = !isPlaying;
